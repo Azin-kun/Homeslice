@@ -693,7 +693,7 @@ body.promo-lock .scroll-ct{overflow:hidden}
 <body>
 <!-- LIGHTBOX -->
 <div class="lb" id="lb"><span class="lb-close" onclick="closeLB()">✕</span><img alt="Garlic Butter Steak" decoding="async" id="lb-img" loading="lazy" src=""/></div>
-<!-- EVENT PROMO POPUP — shown once per visitor until the event is over (see script at end) -->
+<!-- EVENT PROMO POPUP — shown on every page open until the event is over (see script at end) -->
 <div class="promo" id="promo" role="dialog" aria-modal="true" aria-label="Halloween Party at Homeslice, 31 October 2026" aria-hidden="true">
 <div class="promo-card">
 <button class="promo-close" id="promo-close" type="button" aria-label="Close">✕</button>
@@ -1398,23 +1398,17 @@ body.promo-lock .scroll-ct{overflow:hidden}
 </script>
 <script>
 /* ============================================================
-   EVENT PROMO POPUP — shown once per visitor (remembered in
-   localStorage) and never after the event ends. To run a new
-   promo: swap the poster, change KEY so everyone sees it again,
-   and update END + the WhatsApp message. Add ?promo=1 to the URL
-   to preview it regardless.
+   EVENT PROMO POPUP — shown every time the page is opened, until
+   the event ends. To run a new promo: swap the poster and update
+   END + the WhatsApp message.
    ============================================================ */
 (function(){
-  var KEY='hs-promo-halloween-2026';
   var END=Date.parse('2026-11-01T00:00:00+07:00');   /* hide from midnight after the party (WIB) */
   var WA='6287819442998';
   var MSG='Halo Homeslice, saya mau daftar Halloween Party tanggal 31 Oktober 2026.';
 
   var box=document.getElementById('promo'); if(!box) return;
-  var force=/[?&]promo=1\b/.test(location.search);
-  function seen(){try{return localStorage.getItem(KEY)==='1';}catch(e){return false;}}
-  function markSeen(){try{localStorage.setItem(KEY,'1');}catch(e){}}
-  if(!force && (Date.now()>=END || seen())) return;
+  if(Date.now()>=END) return;
 
   var href='https://wa.me/'+WA+'?text='+encodeURIComponent(MSG);
   document.getElementById('promo-poster').href=href;
@@ -1430,7 +1424,6 @@ body.promo-lock .scroll-ct{overflow:hidden}
     void box.offsetWidth;            /* reflow so the fade-in runs */
     box.classList.add('show');
     document.getElementById('promo-close').focus({preventScroll:true});
-    markSeen();
   }
   function close(){
     if(!box.classList.contains('open')) return;
